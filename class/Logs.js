@@ -1,8 +1,4 @@
-import getTime from "./getTime.js";
-import getRandom from "./getRandom.js";
-
-
-const $chat = document.querySelector('.chat');
+import { getRandom, getTime } from "../utils/index.js";
 
 const LOGS = {
     start: 'Часы показывали [time], когда [player1] и [player2] бросили вызов друг другу.',
@@ -44,40 +40,55 @@ const LOGS = {
     draw: 'Ничья - это тоже победа!'
 };
 
-export default function generateLogs(type, player1, player2, attackValue) {
-    const {name: namePlayer1, hp: hpPlayer1} = player1;
-    const {name: namePlayer2, hp: hpPlayer2} = player2;
 
-    let text;
-    let el;
-    const time = getTime();
-
-    switch(type) {
-        case 'start': 
-            text = LOGS[type].replace('[time]', time).replace('[player1]', namePlayer1).replace('[player2]', namePlayer2);
-            el = `<p>${text}</p>`;
-            break;
-
-        case 'defence':
-            text = LOGS[type][getRandom(LOGS[type].length - 1)].replace('[playerDefence]', namePlayer1).replace('[playerKick]', namePlayer2);
-            el = `<p>[${time}] [${text}] [-0] [${hpPlayer1} / 100]</p>`;
-            break;
-
-        case 'hit':
-            text = LOGS[type][getRandom(LOGS[type].length - 1)].replace('[playerKick]', namePlayer1).replace('[playerDefence]', namePlayer2);
-            el = `<p>[${time}] [${text}] [-${attackValue}] [${hpPlayer2} / 100]</p>`;
-            break; 
-
-        case 'draw':
-            text = LOGS[type][getRandom(LOGS[type].length - 1)].replace('[playerKick]', namePlayer1).replace('[playerDefence]', namePlayer2);
-            el = `<p>${time} ${text}</p>`;
-            break; 
-
-        case 'end':
-            text = LOGS[type][getRandom(LOGS[type].length - 1)].replace('[playerWins]', namePlayer1).replace('[playerLose]', namePlayer2);
-            el = `<p>${time} ${text}</p>`;
-            break;   
+export default class Logs {
+    constructor({
+        chat
+    }) {
+        this.root = chat;
     }
 
-    $chat.insertAdjacentHTML('afterbegin', el);
+    generateLogs = (type, {name: namePlayer1, hp: hpPlayer1}, {name: namePlayer2, hp: hpPlayer2}, attackValue) => {
+        let text;
+        let el;
+        const time = getTime();
+    
+        switch(type) {
+            case 'start': 
+                text = LOGS[type]
+                .replace('[time]', time)
+                .replace('[player1]', namePlayer1)
+                .replace('[player2]', namePlayer2);
+                el = `<p>${text}</p>`;
+                break;
+    
+            case 'defence':
+                text = LOGS[type][getRandom(LOGS[type].length - 1) - 1]
+                .replace('[playerDefence]', namePlayer1)
+                .replace('[playerKick]', namePlayer2);
+                el = `<p>[${time}] [${text}] [${hpPlayer1} / 100]</p>`;
+                break;
+    
+            case 'hit':
+                text = LOGS[type][getRandom(LOGS[type].length - 1) - 1]
+                .replace('[playerKick]', namePlayer1)
+                .replace('[playerDefence]', namePlayer2);
+                el = `<p>[${time}] [${text}] [-${attackValue}] [${hpPlayer2} / 100]</p>`;
+                break; 
+    
+            case 'draw':
+                text = LOGS[type]
+                el = `<p>[${time}] [${text}]</p>`;
+                break; 
+    
+            case 'end':
+                text = LOGS[type][getRandom(LOGS[type].length - 1) - 1]
+                .replace('[playerWins]', namePlayer1)
+                .replace('[playerLose]', namePlayer2);
+                el = `<p>${time} ${text}</p>`;
+                break;   
+        }
+    
+        this.root.insertAdjacentHTML('afterbegin', el);
+    }
 }
