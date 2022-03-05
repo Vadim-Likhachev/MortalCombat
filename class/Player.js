@@ -36,6 +36,7 @@ export default class Player {
         const $life = createElement('div', 'life');
         const $name = createElement('div', 'name');
         const $img = createElement('img');
+
     
         $life.style.width = `${this.hp}%`;
         $name.innerText = this.name;
