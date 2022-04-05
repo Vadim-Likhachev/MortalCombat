@@ -109,7 +109,7 @@ export default class Game {
             const reloadButton =  this.createReloadButton();
             
             reloadButton.addEventListener('click', function() {
-                window.location.pathname = './SelectPlayer/index.html';
+                window.location.pathname = './index.html';
             });
     
             this.root.appendChild(reloadButton);

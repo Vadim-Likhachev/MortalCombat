@@ -1,4 +1,4 @@
-import Game from "./class/Game.js";
+import Game from "../class/Game.js";
 
 
 const $arenas = document.querySelector('.arenas');
